@@ -1,35 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { emitter } from '../../utils/emitter';
 import './ModalUser.scss'
+import _ from 'lodash'
 
-class ModalUser extends Component {
+class ModalEditUser extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             email: '',
             password: '',
             firstName: '',
             lastName: '',
             address: ''
         }
-        this.listenToEmitter();
-    }
-    listenToEmitter() {
-        emitter.on('EVENT_CLEAR_MODAR_DATA', () => {
-            this.setState({
-                email: '',
-                password: '',
-                firstName: '',
-                lastName: '',
-                address: ''
-            })
-        })
     }
 
     componentDidMount() {
+        let user = this.props.currentUser;
+        if (user && !_.isEmpty(user)) {
+            this.setState({
+                id: user.id,
+                email: user.email,
+                password: 'hashcode',
+                firstName: user.firstName,
+                lastName: user.lastName,
+                address: user.address
+            })
+        }
     }
 
     toggle = () => {
@@ -57,10 +57,10 @@ class ModalUser extends Component {
         return isValid;
     }
 
-    handleAddNewUser = () => {
+    handleSaveUser = () => {
         let isValid = this.checkValidateInput()
         if (isValid === true) {
-            this.props.createNewUser(this.state);
+            this.props.editUser(this.state);
         }
     }
 
@@ -72,7 +72,7 @@ class ModalUser extends Component {
                 size="lg"
                 centered
             >
-                <ModalHeader toggle={() => this.toggle()}>Create a new user</ModalHeader>
+                <ModalHeader toggle={() => this.toggle()}>Edit user</ModalHeader>
                 <ModalBody>
                     <div class="container">
                         <form action="/post-crud" method="post" class="row g-3">
@@ -84,6 +84,7 @@ class ModalUser extends Component {
                                     placeholder="Email"
                                     value={this.state.email}
                                     onChange={(event) => { this.handleOnChangeInput(event, 'email') }}
+                                    disabled
                                 />
                             </div>
                             <div class="col-6">
@@ -94,6 +95,7 @@ class ModalUser extends Component {
                                     placeholder="Password"
                                     value={this.state.password}
                                     onChange={(event) => { this.handleOnChangeInput(event, 'password') }}
+                                    disabled
                                 />
                             </div>
                             <div class="col-6">
@@ -133,8 +135,8 @@ class ModalUser extends Component {
                     <Button
                         className='px-2'
                         color="primary"
-                        onClick={() => this.handleAddNewUser()}>
-                        Add new
+                        onClick={() => this.handleSaveUser()}>
+                        Save
                     </Button>
                     <Button
                         className='px-2'
@@ -159,4 +161,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalUser);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalEditUser);
