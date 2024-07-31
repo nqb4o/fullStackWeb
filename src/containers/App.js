@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { userIsAuthenticated, userIsNotAuthenticated } from '../hoc/authentication';
 
-import { path } from '../utils'
+import { PATH } from '../utils'
 
 import Home from '../routes/Home';
 import Login from './Auth/Login';
@@ -46,10 +46,10 @@ class App extends Component {
                         {this.props.isLoggedIn && <Header />}
                         <span className="content-container">
                             <Switch>
-                                <Route path={path.HOME} exact component={(Home)} />
-                                <Route path={path.HOMEPAGE} exact component={(HomePage)} />
-                                <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
-                                <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
+                                <Route path={PATH.HOME} exact component={(Home)} />
+                                <Route path={PATH.HOMEPAGE} exact component={(HomePage)} />
+                                <Route path={PATH.LOGIN} component={userIsNotAuthenticated(Login)} />
+                                <Route path={PATH.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>
                         </span>
 
